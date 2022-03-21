@@ -99,11 +99,7 @@ public extension AVPlayerViewController {
             
             // Search && show subtitles
             if let text = Subtitles.searchSubtitles(strongSelf.parsedPayload, time.seconds) {
-                if let data = text.data(using: .utf8), let documentAttributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
-                    label.attributedText = documentAttributedString
-                } else {
-                    label.attributedText = NSAttributedString(string: text)
-                }
+                label.text = text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
             }
             
             // Adjust size
