@@ -98,7 +98,13 @@ public extension AVPlayerViewController {
             }
             
             // Search && show subtitles
-            label.text = Subtitles.searchSubtitles(strongSelf.parsedPayload, time.seconds)
+            if let text = Subtitles.searchSubtitles(strongSelf.parsedPayload, time.seconds) {
+                if let data = text.data(using: .utf8), let documentAttributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
+                    label.attributedText = documentAttributedString
+                } else {
+                    label.attributedText = NSAttributedString(string: text)
+                }
+            }
             
             // Adjust size
             let baseSize = CGSize(width: label.bounds.width, height: .greatestFiniteMagnitude)
